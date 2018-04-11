@@ -1,5 +1,19 @@
 {
+	"name": "opsway/shipmile-api",
+	"description": "PHP SDK for Shipmile API",
+	"license": "MIT",
+	"keywords": [
+		"shipmile",
+		"API",
+		"SDK",
+		"library"
+	],
+	"support": {
+		"issues": "https://github.com/opsway/shipmile-api/issues"
+	},
+	"prefer-stable": true,
     "require": {
+    	"php": "^7.1",
         "guzzlehttp/guzzle": "^6.3"
     },
     "autoload": {
