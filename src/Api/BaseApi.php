@@ -16,21 +16,18 @@ class BaseApi {
 	public function getList(array $filters = []) {
 		$response = $this->client->getList(static::API_PATH, $filters);
 
-		return $response->getContents();
+		return $response;
 	}
 
 	public function get(string $id, array $params = []) {
 		$response = $this->client->get(static::API_PATH, $id, $params);
-		if ($response instanceof Stream) {
-			return $response;
-		}
 
-		return $response->getContents();
+		return $response;
 	}
 
 	public function create(array $data, array $params = []) {
 		$response = $this->client->post(static::API_PATH_POST, $data, $params);
 
-		return $response->getContents();
+		return $response;
 	}
 }

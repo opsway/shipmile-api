@@ -8,6 +8,9 @@ use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Uri;
+use OpsWay\Shipmile\Exception\BaseException;
+use OpsWay\Shipmile\Exception\ApiErrorException;
+use OpsWay\Shipmile\Exception\UnexceptedResponseException;
 
 class Client {
 
@@ -28,8 +31,6 @@ class Client {
 
 		$requestOptions += ['base_uri' => self::ENDPOINT, RequestOptions::HTTP_ERRORS => false, 'headers' => ['X-SM-TOKEN' => $authToken]];
 		$this->httpClient = $httpClient ?: new BaseClient($requestOptions);
-		
-		
 	}
 
 	public function getList(string $url, array $filters) {
@@ -50,15 +51,16 @@ class Client {
 
 	public function processResult(ResponseInterface $response) {
 		try {
-			return $response->getBody();
-		} catch (\InvalidArgumentException $e) {
-			$result = [
-				'message' => 'Internal API error: ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase(),
-			];
+			$result = json_decode($response->getBody()->getContents(), TRUE);
+			if(isset($result['errors'])) {
+				throw new BaseException('Error occured: ' . $response->getStatusCode() . '. ' . $response->getReasonPhrase() . '. Message: '  . $result['errors'][0]['message']);
+			}
+			if(isset($result['message'])) {
+				throw new ApiErrorException('Internal error');
+			}
+		} catch (\Throwable $e) {
+			
 		}
-		if (isset($result['code']) && $result['code'] == 0) {
-			return $result;
-		}
-		throw new Exception('Response from Shipmile is not successful. Message: ' . $result['message']);
+		throw new BaseException('Response from Shipmile is not successful. Message: ' . $result['errors'][0]['message']);
 	}
 }
