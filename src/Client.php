@@ -46,21 +46,21 @@ class Client {
 			'headers' => ['content-type' => 'application/json'],
 			'json' => $data
 		];
-		return $this->processResult($this->httpClient->post($url, $body));
+
+		$response = $this->httpClient->post($url, $body); 
+		return $this->processResult($response);
 	}
 
 	public function processResult(ResponseInterface $response) {
-		try {
-			$result = json_decode($response->getBody()->getContents(), TRUE);
-			if(isset($result['errors'])) {
-				throw new BaseException('Error occured: ' . $response->getStatusCode() . '. ' . $response->getReasonPhrase() . '. Message: '  . $result['errors'][0]['message']);
-			}
-			if(isset($result['message'])) {
-				throw new ApiErrorException('Internal error');
-			}
-		} catch (\Throwable $e) {
-			
-		}
-		throw new BaseException('Response from Shipmile is not successful. Message: ' . $result['errors'][0]['message']);
+	    $responseData = json_decode($response->getBody()->getContents(), TRUE);
+	    if(isset($responseData['errors'])) {
+	        throw new BaseException('Error occured: ' . $response->getStatusCode() . '. ' . $response->getReasonPhrase() . '. Message: '  . $responseData['errors'][0]['message']);
+	    } 
+	    elseif(isset($responseData['message'])) {
+	        throw new ApiErrorException('Internal error: ' . $responseData['message']);
+	    } elseif ($responseData === null) {
+	    	throw new UnexceptedResponseException('Unexcepted response');
+	    }
+	    return $responseData;
 	}
 }
