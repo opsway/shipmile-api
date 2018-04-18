@@ -8,13 +8,14 @@ class Api {
 
 	protected $client;
 
-	public function __construct($authToken) {
+	public function __construct($authToken, $toProduction) {
 		$this->authToken = $authToken;
+		$this->toProduction = $toProduction;
 	}
 
 	public function getClient() {
 		if ($this->client === null) {
-			$this->setClient(new Client($this->authToken));
+			$this->setClient(new Client($this->authToken, $this->toProduction));
 		}
 
 		return $this->client;

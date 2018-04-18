@@ -15,6 +15,7 @@ use OpsWay\Shipmile\Exception\UnexceptedResponseException;
 class Client {
 
 	const ENDPOINT = 'https://test.shipmile.com/v3/';
+	const PROD_ENDPOINT = 'https://api.shipmile.com/v3/';
 
 	/**
 	* @var Client
@@ -26,10 +27,11 @@ class Client {
 	*/
 	public $authToken;
 
-	public function __construct(string $authToken, ClientInterface $httpClient = null, array $requestOptions = []) {
+	public function __construct(string $authToken, bool $toProduction = false, ClientInterface $httpClient = null, array $requestOptions = []) {
 		$this->authToken = $authToken;
+		$this->toProduction = $toProduction;
 
-		$requestOptions += ['base_uri' => self::ENDPOINT, RequestOptions::HTTP_ERRORS => false, 'headers' => ['X-SM-TOKEN' => $authToken]];
+		$requestOptions += ['base_uri' => ($this->toProduction === false ? self::ENDPOINT : self::PROD_ENDPOINT), RequestOptions::HTTP_ERRORS => false, 'headers' => ['X-SM-TOKEN' => $authToken]];
 		$this->httpClient = $httpClient ?: new BaseClient($requestOptions);
 	}
 
