@@ -1,50 +1,59 @@
-<?php 
+<?php
 
 namespace OpsWay\Shipmile;
 
-class Api {
+class Api
+{
 
-	protected $authToken;
+    protected $authToken;
 
-	protected $client;
+    protected $client;
 
-	public function __construct($authToken, $toProduction) {
-		$this->authToken = $authToken;
-		$this->toProduction = $toProduction;
-	}
+    public function __construct($authToken, $toProduction)
+    {
+        $this->authToken = $authToken;
+        $this->toProduction = $toProduction;
+    }
 
-	public function getClient() {
-		if ($this->client === null) {
-			$this->setClient(new Client($this->authToken, $this->toProduction));
-		}
+    public function getClient()
+    {
+        if ($this->client === null) {
+            $this->setClient(new Client($this->authToken, $this->toProduction));
+        }
 
-		return $this->client;
-	}
+        return $this->client;
+    }
 
-	public function setClient(Client $client) {
-		$this->client = $client;
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function shipments() {
-		return new Api\Shipments($this->getClient());
-	}
+    public function shipments()
+    {
+        return new Api\Shipments($this->getClient());
+    }
 
-	public function addresses() {
-		return new Api\Addresses($this->getClient());
-	}
+    public function addresses()
+    {
+        return new Api\Addresses($this->getClient());
+    }
 
-	public function pickups() {
-		return new Api\Pickups($this->getClient());
-	}
+    public function pickups()
+    {
+        return new Api\Pickups($this->getClient());
+    }
 
-	public function labels() {
-		return new Api\Labels($this->getClient());
-	}
+    public function labels()
+    {
+        return new Api\Labels($this->getClient());
+    }
 
-	public function pincodes() {
-		return new Api\Pincodes($this->getClient());
-	}
+    public function pincodes()
+    {
+        return new Api\Pincodes($this->getClient());
+    }
 
 }
