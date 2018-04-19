@@ -9,7 +9,7 @@ class Api
 
     protected $client;
 
-    public function __construct($authToken, $toProduction)
+    public function __construct(string $authToken, bool $toProduction)
     {
         $this->authToken = $authToken;
         $this->toProduction = $toProduction;

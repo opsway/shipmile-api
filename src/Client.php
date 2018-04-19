@@ -55,7 +55,7 @@ class Client
         return $this->processResult($this->httpClient->get($url . '/' . $id, ['query' => $params]));
     }
 
-    public function post(string $url, array $data = [], array $params = [])
+    public function post(string $url, array $data = [])
     {
         $body = [
             'headers' => ['content-type' => 'application/json'],
@@ -69,7 +69,7 @@ class Client
     public function processResult(ResponseInterface $response)
     {
         $responseData = json_decode($response->getBody()->getContents(), true);
-        print_r($response->getStatusCode());
+        
         if (isset($responseData['errors'])) {
             var_dump($responseData['errors']);
             throw new BaseException('Error occured: ' . $response->getStatusCode() . '. ' . $response->getReasonPhrase() . '. Message: ' . $responseData['errors'][0]['message']);
